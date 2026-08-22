@@ -6,6 +6,6 @@ use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('dashboard');
-});
+})->name('dashboard');
 Route::resource('categories', CategoryController::class);
 Route::resource('transaction', TransactionController::class);

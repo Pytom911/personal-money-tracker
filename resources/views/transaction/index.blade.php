@@ -1,314 +1,274 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'Transactions')
 
-    <title>Transactions</title>
+@section('content')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    {{-- Header --}}
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    >
-</head>
-
-<body class="bg-light">
-
-    <div class="container py-5">
-
-        {{-- Header --}}
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-
-            <div>
-                <h1 class="fw-bold mb-1">
-                    Transactions
-                </h1>
-
-                <p class="text-muted mb-0">
-                    Kelola semua transaksi keuangan lu.
-                </p>
-            </div>
-
-            <a
-                href="{{ route('transaction.create') }}"
-                class="btn btn-primary"
-            >
-                <i class="bi bi-plus-lg me-1"></i>
-                Tambah Transaksi
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5">
+        <div>
+            <p class="text-muted-custom mb-2">Money Movement</p>
+            <h1 class="dashboard-title mb-1">Transactions</h1>
+            <p class="text-muted mb-0">Kelola semua transaksi keuangan lu.</p>
+        </div>
+        <div class="mt-4 mt-md-0">
+            <a href="{{ route('transaction.create') }}" class="btn btn-dark">
+                <i class="bi bi-plus-circle-fill me-2"></i> Add Transaction
             </a>
+        </div>
+    </div>
 
+
+    {{-- Success Message --}}
+
+    @if(session('success'))
+
+        <div class="alert alert-flash-success alert-dismissible fade show d-flex align-items-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            {{ session('success') }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
         </div>
 
+    @endif
 
-        {{-- Success Message --}}
 
-        @if(session('success'))
+    {{-- Transaction Card --}}
 
-            <div
-                class="alert alert-success alert-dismissible fade show"
-                role="alert"
-            >
-                <i class="bi bi-check-circle me-1"></i>
-                {{ session('success') }}
+    <div class="dashboard-card p-4 p-md-5">
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                ></button>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h5 class="card-title-custom mb-1">All Transactions</h5>
+                <small class="text-muted">Riwayat lengkap keluar masuk uang</small>
             </div>
+            <span class="badge badge-type badge-income">
+                {{ $transactions->count() }} Items
+            </span>
+        </div>
 
-        @endif
+        <div class="table-responsive">
 
+            <table class="table table-custom table-hover align-middle">
 
-        {{-- Transaction Card --}}
+                <thead>
 
-        <div class="card border-0 shadow-sm">
+                    <tr>
 
-            <div class="card-body p-0">
+                        <th>
+                            #
+                        </th>
 
-                <div class="table-responsive">
+                        <th>
+                            Category
+                        </th>
 
-                    <table class="table table-hover align-middle mb-0">
+                        <th>
+                            Type
+                        </th>
 
-                        <thead class="table-light">
+                        <th>
+                            Amount
+                        </th>
 
-                            <tr>
+                        <th>
+                            Description
+                        </th>
 
-                                <th class="px-4 py-3">
-                                    #
-                                </th>
+                        <th>
+                            Date
+                        </th>
 
-                                <th>
-                                    Category
-                                </th>
+                        <th class="text-end">
+                            Action
+                        </th>
 
-                                <th>
-                                    Type
-                                </th>
+                    </tr>
 
-                                <th>
-                                    Amount
-                                </th>
+                </thead>
 
-                                <th>
-                                    Description
-                                </th>
+                <tbody>
 
-                                <th>
-                                    Date
-                                </th>
+                    @forelse($transactions as $transaction)
 
-                                <th class="text-end px-4">
-                                    Action
-                                </th>
+                        <tr>
 
-                            </tr>
+                            {{-- ID --}}
 
-                        </thead>
+                            <td class="text-muted fw-semibold">
+                                #{{ str_pad($transaction->id, 3, '0', STR_PAD_LEFT) }}
+                            </td>
 
-                        <tbody>
 
-                            @forelse($transactions as $transaction)
+                            {{-- Category --}}
 
-                                <tr>
+                            <td>
 
-                                    {{-- ID --}}
+                                <span class="fw-bold text-dark">
+                                    {{ $transaction->category->name ?? 'Tanpa Category' }}
+                                </span>
 
-                                    <td class="px-4">
-                                        {{ $transaction->id }}
-                                    </td>
+                            </td>
 
 
-                                    {{-- Category --}}
+                            {{-- Type --}}
 
-                                    <td>
+                            <td>
 
-                                        <span class="fw-semibold">
-                                            {{ $transaction->category->name ?? 'Tanpa Category' }}
-                                        </span>
+                                @if($transaction->type === 'income')
 
-                                    </td>
+                                    <span class="badge badge-type badge-income">
+                                        <i class="bi bi-arrow-down-left me-1"></i> Income
+                                    </span>
 
+                                @else
 
-                                    {{-- Type --}}
+                                    <span class="badge badge-type badge-expense">
+                                        <i class="bi bi-arrow-up-right me-1"></i> Expense
+                                    </span>
 
-                                    <td>
+                                @endif
 
-                                        @if($transaction->type === 'income')
+                            </td>
 
-                                            <span class="badge text-bg-success">
-                                                <i class="bi bi-arrow-down-left me-1"></i>
-                                                Income
-                                            </span>
 
-                                        @else
+                            {{-- Amount --}}
 
-                                            <span class="badge text-bg-danger">
-                                                <i class="bi bi-arrow-up-right me-1"></i>
-                                                Expense
-                                            </span>
+                            <td>
 
-                                        @endif
+                                <span
+                                    class="fw-bold
+                                    {{ $transaction->type === 'income'
+                                        ? 'text-success'
+                                        : 'text-danger' }}"
+                                >
 
-                                    </td>
+                                    {{ $transaction->type === 'income' ? '+' : '-' }}
+                                    Rp {{ number_format($transaction->amount, 0, ',', '.') }}
 
+                                </span>
 
-                                    {{-- Amount --}}
+                            </td>
 
-                                    <td>
 
-                                        <span
-                                            class="fw-semibold
-                                            {{ $transaction->type === 'income'
-                                                ? 'text-success'
-                                                : 'text-danger' }}"
-                                        >
+                            {{-- Description --}}
 
-                                            {{ $transaction->type === 'income' ? '+' : '-' }}
-                                            Rp {{ number_format($transaction->amount, 0, ',', '.') }}
+                            <td>
 
-                                        </span>
+                                <span class="text-muted">
+                                    {{ \Illuminate\Support\Str::limit($transaction->description, 40) }}
+                                </span>
 
-                                    </td>
+                            </td>
 
 
-                                    {{-- Description --}}
+                            {{-- Date --}}
 
-                                    <td>
+                            <td>
 
-                                        <span class="text-muted">
-                                            {{ $transaction->description }}
-                                        </span>
+                                <span class="fw-medium text-dark">
+                                    {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d M Y') }}
+                                </span>
 
-                                    </td>
+                            </td>
 
 
-                                    {{-- Date --}}
+                            {{-- Action --}}
 
-                                    <td>
+                            <td class="text-end">
 
-                                        {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d M Y') }}
+                                <div class="d-flex justify-content-end gap-2">
 
-                                    </td>
+                                    {{-- Show --}}
 
+                                    <a
+                                        href="{{ route('transaction.show', $transaction) }}"
+                                        class="btn-action-icon btn-view"
+                                        title="Detail"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </a>
 
-                                    {{-- Action --}}
 
-                                    <td class="text-end px-4">
+                                    {{-- Edit --}}
 
-                                        <div class="d-flex justify-content-end gap-1">
+                                    <a
+                                        href="{{ route('transaction.edit', $transaction) }}"
+                                        class="btn-action-icon btn-edit"
+                                        title="Edit"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
 
-                                            {{-- Show --}}
 
-                                            <a
-                                                href="{{ route('transaction.show', $transaction) }}"
-                                                class="btn btn-sm btn-outline-secondary"
-                                                title="Detail"
-                                            >
-                                                <i class="bi bi-eye"></i>
-                                            </a>
+                                    {{-- Delete --}}
 
-
-                                            {{-- Edit --}}
-
-                                            <a
-                                                href="{{ route('transaction.edit', $transaction) }}"
-                                                class="btn btn-sm btn-outline-primary"
-                                                title="Edit"
-                                            >
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-
-
-                                            {{-- Delete --}}
-
-                                            <form
-                                                action="{{ route('transaction.destroy', $transaction) }}"
-                                                method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus transaksi ini?')"
-                                            >
-
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button
-                                                    type="submit"
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    title="Hapus"
-                                                >
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-
-                                            </form>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                            @empty
-
-                                <tr>
-
-                                    <td
-                                        colspan="7"
-                                        class="text-center py-5"
+                                    <form
+                                        action="{{ route('transaction.destroy', $transaction) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus transaksi ini?')"
                                     >
 
-                                        <div class="text-muted">
+                                        @csrf
+                                        @method('DELETE')
 
-                                            <i class="bi bi-receipt fs-1 d-block mb-3"></i>
+                                        <button
+                                            type="submit"
+                                            class="btn-action-icon btn-delete border"
+                                            title="Hapus"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                        </button>
 
-                                            <h5 class="fw-semibold">
-                                                Belum ada transaksi
-                                            </h5>
+                                    </form>
 
-                                            <p class="mb-3">
-                                                Lu belum memiliki transaksi.
-                                            </p>
+                                </div>
 
-                                            <a
-                                                href="{{ route('transaction.create') }}"
-                                                class="btn btn-primary"
-                                            >
-                                                <i class="bi bi-plus-lg me-1"></i>
-                                                Tambah Transaksi
-                                            </a>
+                            </td>
 
-                                        </div>
+                        </tr>
 
-                                    </td>
+                    @empty
 
-                                </tr>
+                        <tr>
 
-                            @endforelse
+                            <td colspan="7" class="p-0">
 
-                        </tbody>
+                                <div class="empty-state">
 
-                    </table>
+                                    <div class="empty-state-icon">
+                                        <i class="bi bi-receipt-cutoff"></i>
+                                    </div>
 
-                </div>
+                                    <h5 class="card-title-custom mb-1">Belum ada transaksi</h5>
 
-            </div>
+                                    <p class="text-muted mb-4">
+                                        Catat transaksi pertamamu untuk mulai melacak keuangan.
+                                    </p>
+
+                                    <a href="{{ route('transaction.create') }}" class="btn btn-dark">
+                                        <i class="bi bi-plus-circle-fill me-2"></i> Add Transaction
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
 
         </div>
 
     </div>
 
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    ></script>
-
-</body>
-
-</html>
+@endsection

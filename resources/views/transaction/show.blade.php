@@ -1,235 +1,146 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'Detail Transaksi')
 
-    <title>Detail Transaksi</title>
+@section('content')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <div class="row justify-content-center">
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    >
-</head>
+        <div class="col-md-9 col-lg-7 col-xl-6">
 
-<body class="bg-light">
+            {{-- Header --}}
 
-    <div class="container py-5">
-
-        <div class="row justify-content-center">
-
-            <div class="col-md-8 col-lg-7">
-
-                <div class="d-flex justify-content-between align-items-center mb-4">
-
-                    <div>
-
-                        <h1 class="fw-bold mb-1">
-                            Detail Transaksi
-                        </h1>
-
-                        <p class="text-muted mb-0">
-                            Informasi lengkap transaksi.
-                        </p>
-
-                    </div>
-
-                    <a
-                        href="{{ route('transaction.index') }}"
-                        class="btn btn-light border"
-                    >
-                        Kembali
-                    </a>
-
+            <div class="d-flex justify-content-between align-items-start mb-5">
+                <div>
+                    <p class="text-muted-custom mb-2">Transaction Detail</p>
+                    <h1 class="dashboard-title mb-1">Detail Transaksi</h1>
+                    <p class="text-muted mb-0">Informasi lengkap transaksi.</p>
                 </div>
 
+                <a
+                    href="{{ route('transaction.index') }}"
+                    class="btn-soft d-inline-flex align-items-center gap-2"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span class="d-none d-sm-inline">Kembali</span>
+                </a>
+            </div>
 
-                <div class="card border-0 shadow-sm">
 
-                    <div class="card-body p-4">
+            {{-- Detail Card --}}
 
+            <div class="dashboard-card overflow-hidden">
 
-                        {{-- Amount --}}
+                {{-- Amount Highlight --}}
 
-                        <div class="text-center mb-4">
+                @if($transaction->type === 'income')
 
-                            @if($transaction->type === 'income')
-
-                                <div class="text-success mb-2">
-                                    <i class="bi bi-arrow-down-left-circle fs-1"></i>
-                                </div>
-
-                                <small class="text-muted">
-                                    Income
-                                </small>
-
-                                <h2 class="fw-bold text-success">
-                                    + Rp {{ number_format($transaction->amount, 0, ',', '.') }}
-                                </h2>
-
-                            @else
-
-                                <div class="text-danger mb-2">
-                                    <i class="bi bi-arrow-up-right-circle fs-1"></i>
-                                </div>
-
-                                <small class="text-muted">
-                                    Expense
-                                </small>
-
-                                <h2 class="fw-bold text-danger">
-                                    - Rp {{ number_format($transaction->amount, 0, ',', '.') }}
-                                </h2>
-
-                            @endif
-
+                    <div class="card-balance-highlight p-4 p-md-5 text-center">
+                        <div class="summary-icon transaction-income mx-auto mb-3 shadow-sm">
+                            <i class="bi bi-arrow-down-left"></i>
                         </div>
-
-
-                        <hr>
-
-
-                        {{-- Category --}}
-
-                        <div class="py-3">
-
-                            <small class="text-muted d-block mb-1">
-                                Category
-                            </small>
-
-                            <div class="fw-semibold">
-                                {{ $transaction->category->name }}
-                            </div>
-
+                        <small class="text-white-50 text-uppercase fw-semibold" style="letter-spacing: 1px;">
+                            Income
+                        </small>
+                        <div class="summary-value">
+                            + Rp {{ number_format($transaction->amount, 0, ',', '.') }}
                         </div>
+                        <span class="badge badge-type badge-income mt-3">
+                            {{ $transaction->category->name ?? 'Tanpa Category' }}
+                        </span>
+                    </div>
 
+                @else
 
-                        {{-- Type --}}
-
-                        <div class="py-3">
-
-                            <small class="text-muted d-block mb-1">
-                                Type
-                            </small>
-
-                            @if($transaction->type === 'income')
-
-                                <span class="badge text-bg-success">
-                                    Income
-                                </span>
-
-                            @else
-
-                                <span class="badge text-bg-danger">
-                                    Expense
-                                </span>
-
-                            @endif
-
+                    <div class="card-balance-highlight p-4 p-md-5 text-center" style="background: linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%);">
+                        <div class="summary-icon transaction-expense mx-auto mb-3 shadow-sm">
+                            <i class="bi bi-arrow-up-right"></i>
                         </div>
-
-
-                        {{-- Description --}}
-
-                        <div class="py-3">
-
-                            <small class="text-muted d-block mb-1">
-                                Description
-                            </small>
-
-                            <div>
-                                {{ $transaction->description }}
-                            </div>
-
+                        <small class="text-white-50 text-uppercase fw-semibold" style="letter-spacing: 1px;">
+                            Expense
+                        </small>
+                        <div class="summary-value">
+                            - Rp {{ number_format($transaction->amount, 0, ',', '.') }}
                         </div>
+                        <span class="badge badge-type badge-expense mt-3">
+                            {{ $transaction->category->name ?? 'Tanpa Category' }}
+                        </span>
+                    </div>
+
+                @endif
 
 
-                        {{-- Date --}}
+                {{-- Info Rows --}}
 
-                        <div class="py-3">
+                <div class="p-4 p-md-5">
 
-                            <small class="text-muted d-block mb-1">
-                                Transaction Date
-                            </small>
+                    <div class="detail-row">
+                        <span class="detail-label">Type</span>
 
-                            <div>
-                                {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d F Y') }}
-                            </div>
+                        @if($transaction->type === 'income')
+                            <span class="badge badge-type badge-income">
+                                <i class="bi bi-arrow-down-left me-1"></i> Income
+                            </span>
+                        @else
+                            <span class="badge badge-type badge-expense">
+                                <i class="bi bi-arrow-up-right me-1"></i> Expense
+                            </span>
+                        @endif
+                    </div>
 
-                        </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Description</span>
+                        <span class="detail-value">{{ $transaction->description }}</span>
+                    </div>
 
+                    <div class="detail-row">
+                        <span class="detail-label">Transaction Date</span>
+                        <span class="detail-value">
+                            <i class="bi bi-calendar-event me-2 text-muted"></i>{{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d F Y') }}
+                        </span>
+                    </div>
 
-                        {{-- Created At --}}
+                    <div class="detail-row">
+                        <span class="detail-label">Created At</span>
+                        <span class="detail-value">{{ $transaction->created_at->format('d F Y, H:i') }}</span>
+                    </div>
 
-                        <div class="py-3">
-
-                            <small class="text-muted d-block mb-1">
-                                Created At
-                            </small>
-
-                            <div>
-                                {{ $transaction->created_at->format('d F Y, H:i') }}
-                            </div>
-
-                        </div>
-
-
-                        {{-- Updated At --}}
-
-                        <div class="py-3">
-
-                            <small class="text-muted d-block mb-1">
-                                Updated At
-                            </small>
-
-                            <div>
-                                {{ $transaction->updated_at->format('d F Y, H:i') }}
-                            </div>
-
-                        </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Updated At</span>
+                        <span class="detail-value">{{ $transaction->updated_at->format('d F Y, H:i') }}</span>
+                    </div>
 
 
-                        <hr>
+                    {{-- Actions --}}
 
+                    <div class="d-flex gap-2 pt-4 mt-2">
 
-                        {{-- Actions --}}
+                        <a
+                            href="{{ route('transaction.edit', $transaction) }}"
+                            class="btn btn-dark px-4"
+                        >
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Edit
+                        </a>
 
-                        <div class="d-flex gap-2">
+                        <form
+                            action="{{ route('transaction.destroy', $transaction) }}"
+                            method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus transaksi ini?')"
+                        >
 
-                            <a
-                                href="{{ route('transaction.edit', $transaction) }}"
-                                class="btn btn-primary"
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger px-4 rounded-3 fw-semibold"
                             >
-                                <i class="bi bi-pencil me-1"></i>
-                                Edit
-                            </a>
+                                <i class="bi bi-trash me-2"></i>
+                                Hapus
+                            </button>
 
-                            <form
-                                action="{{ route('transaction.destroy', $transaction) }}"
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus transaksi ini?')"
-                            >
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-outline-danger"
-                                >
-                                    <i class="bi bi-trash me-1"></i>
-                                    Hapus
-                                </button>
-
-                            </form>
-
-                        </div>
+                        </form>
 
                     </div>
 
@@ -241,6 +152,4 @@
 
     </div>
 
-</body>
-
-</html>
+@endsection

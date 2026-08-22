@@ -1,162 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'Edit Category')
 
-    <title>Edit Category</title>
+@section('content')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
+    <div class="row justify-content-center">
 
-<body class="bg-light">
+        <div class="col-md-9 col-lg-7 col-xl-6">
 
-    <div class="container py-5">
+            {{-- Header --}}
 
-        <div class="row justify-content-center">
+            <div class="mb-5">
+                <p class="text-muted-custom mb-2">Update Data</p>
+                <h1 class="dashboard-title mb-1">Edit Category</h1>
+                <p class="text-muted mb-0">Perbarui informasi category.</p>
+            </div>
 
-            <div class="col-md-7 col-lg-6">
 
-                <div class="mb-4">
+            {{-- Back Link (Mobile) --}}
 
-                    <h1 class="fw-bold mb-1">
-                        Edit Category
-                    </h1>
+            <a href="{{ route('categories.index') }}" class="btn-soft d-inline-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-arrow-left"></i> Kembali
+            </a>
 
-                    <p class="text-muted">
-                        Perbarui informasi category.
-                    </p>
 
-                </div>
+            {{-- Form Card --}}
 
-                <div class="card border-0 shadow-sm">
+            <div class="dashboard-card p-4 p-md-5">
 
-                    <div class="card-body p-4">
+                @if($errors->any())
 
-                        @if($errors->any())
+                    <div class="alert alert-flash-danger mb-4">
 
-                            <div class="alert alert-danger">
+                        <strong>
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                            Ada beberapa kesalahan:
+                        </strong>
 
-                                <strong>
-                                    Ada beberapa kesalahan:
-                                </strong>
+                        <ul>
 
-                                <ul class="mb-0 mt-2">
+                            @foreach($errors->all() as $error)
 
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
+                                <li>{{ $error }}</li>
 
-                                </ul>
+                            @endforeach
 
-                            </div>
-
-                        @endif
-
-                        <form
-                            action="{{ route('categories.update', $category) }}"
-                            method="POST"
-                        >
-
-                            @csrf
-                            @method('PUT')
-
-                            {{-- Name --}}
-                            <div class="mb-3">
-
-                                <label
-                                    for="name"
-                                    class="form-label fw-semibold"
-                                >
-                                    Name
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    class="form-control @error('name') is-invalid @enderror"
-                                    value="{{ old('name', $category->name) }}"
-                                    required
-                                >
-
-                                @error('name')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-
-                            </div>
-
-                            {{-- Type --}}
-                            <div class="mb-4">
-
-                                <label
-                                    for="type"
-                                    class="form-label fw-semibold"
-                                >
-                                    Type
-                                </label>
-
-                                <select
-                                    id="type"
-                                    name="type"
-                                    class="form-select @error('type') is-invalid @enderror"
-                                    required
-                                >
-
-                                    <option
-                                        value="income"
-                                        {{ old('type', $category->type) === 'income' ? 'selected' : '' }}
-                                    >
-                                        Income
-                                    </option>
-
-                                    <option
-                                        value="expense"
-                                        {{ old('type', $category->type) === 'expense' ? 'selected' : '' }}
-                                    >
-                                        Expense
-                                    </option>
-
-                                </select>
-
-                                @error('type')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-
-                            </div>
-
-                            {{-- Action --}}
-                            <div class="d-flex gap-2">
-
-                                <a
-                                    href="{{ route('categories.index') }}"
-                                    class="btn btn-light border"
-                                >
-                                    Batal
-                                </a>
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                >
-                                    Update Category
-                                </button>
-
-                            </div>
-
-                        </form>
+                        </ul>
 
                     </div>
 
-                </div>
+                @endif
+
+                <form
+                    action="{{ route('categories.update', $category) }}"
+                    method="POST"
+                >
+
+                    @csrf
+                    @method('PUT')
+
+
+                    {{-- Name --}}
+
+                    <div class="mb-4">
+
+                        <label
+                            for="name"
+                            class="form-label"
+                        >
+                            Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            class="form-control @error('name') is-invalid @enderror"
+                            value="{{ old('name', $category->name) }}"
+                            placeholder="{{ $category->name }}"
+                            required
+                        >
+
+                        @error('name')
+
+                            <div class="text-danger small mt-2 fw-medium">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Type --}}
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Type
+                        </label>
+
+                        <div class="segmented-control">
+
+                            <input
+                                type="radio"
+                                name="type"
+                                id="type_income"
+                                value="income"
+                                {{ old('type', $category->type) === 'income' ? 'checked' : '' }}
+                                required
+                            >
+
+                            <label class="segmented-option" for="type_income">
+                                <i class="bi bi-arrow-down-left"></i> Income
+                            </label>
+
+                            <input
+                                type="radio"
+                                name="type"
+                                id="type_expense"
+                                value="expense"
+                                {{ old('type', $category->type) === 'expense' ? 'checked' : '' }}
+                            >
+
+                            <label class="segmented-option" for="type_expense">
+                                <i class="bi bi-arrow-up-right"></i> Expense
+                            </label>
+
+                        </div>
+
+                        @error('type')
+
+                            <div class="text-danger small mt-2 fw-medium">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Action --}}
+
+                    <div class="d-flex gap-2 pt-2">
+
+                        <a
+                            href="{{ route('categories.index') }}"
+                            class="btn btn-soft px-4"
+                        >
+                            Batal
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-dark px-4"
+                        >
+                            <i class="bi bi-save-fill me-2"></i>
+                            Update Category
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
 
@@ -164,6 +169,4 @@
 
     </div>
 
-</body>
-
-</html>
+@endsection

@@ -1,161 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'Detail Category')
 
-    <title>Detail Category</title>
+@section('content')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
+    <div class="row justify-content-center">
 
-<body class="bg-light">
+        <div class="col-md-9 col-lg-7 col-xl-6">
 
-    <div class="container py-5">
+            {{-- Header --}}
 
-        <div class="row justify-content-center">
-
-            <div class="col-md-8 col-lg-7">
-
-                <div class="d-flex justify-content-between align-items-center mb-4">
-
-                    <div>
-                        <h1 class="fw-bold mb-1">
-                            Detail Category
-                        </h1>
-
-                        <p class="text-muted mb-0">
-                            Informasi lengkap category.
-                        </p>
-                    </div>
-
-                    <a
-                        href="{{ route('categories.index') }}"
-                        class="btn btn-light border"
-                    >
-                        Kembali
-                    </a>
-
+            <div class="d-flex justify-content-between align-items-start mb-5">
+                <div>
+                    <p class="text-muted-custom mb-2">Category Detail</p>
+                    <h1 class="dashboard-title mb-1">Detail Category</h1>
+                    <p class="text-muted mb-0">Informasi lengkap category.</p>
                 </div>
 
-                <div class="card border-0 shadow-sm">
+                <a
+                    href="{{ route('categories.index') }}"
+                    class="btn-soft d-inline-flex align-items-center gap-2"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    <span class="d-none d-sm-inline">Kembali</span>
+                </a>
+            </div>
 
-                    <div class="card-body p-4">
 
-                        {{-- Category Name --}}
-                        <div class="mb-4">
+            {{-- Detail Card --}}
 
-                            <small class="text-muted">
-                                NAME
-                            </small>
+            <div class="dashboard-card overflow-hidden">
 
-                            <h3 class="fw-bold mb-0">
-                                {{ $category->name }}
-                            </h3>
+                {{-- Name Highlight --}}
 
+                @if($category->type === 'income')
+
+                    <div class="card-balance-highlight p-4 p-md-5 text-center">
+                        <div class="summary-icon transaction-income mx-auto mb-3 shadow-sm">
+                            <i class="bi bi-tags-fill"></i>
                         </div>
+                        <small class="text-white-50 text-uppercase fw-semibold" style="letter-spacing: 1px;">
+                            Category
+                        </small>
+                        <div class="summary-value text-capitalize">{{ $category->name }}</div>
+                        <span class="badge badge-type badge-income mt-3">
+                            Income
+                        </span>
+                    </div>
 
-                        {{-- Category Type --}}
-                        <div class="mb-4">
+                @else
 
-                            <small class="text-muted">
-                                TYPE
-                            </small>
-
-                            <div class="mt-1">
-
-                                @if($category->type === 'income')
-
-                                    <span class="badge text-bg-success fs-6">
-                                        Income
-                                    </span>
-
-                                @else
-
-                                    <span class="badge text-bg-danger fs-6">
-                                        Expense
-                                    </span>
-
-                                @endif
-
-                            </div>
-
+                    <div class="card-balance-highlight p-4 p-md-5 text-center" style="background: linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%);">
+                        <div class="summary-icon transaction-expense mx-auto mb-3 shadow-sm">
+                            <i class="bi bi-tags-fill"></i>
                         </div>
+                        <small class="text-white-50 text-uppercase fw-semibold" style="letter-spacing: 1px;">
+                            Category
+                        </small>
+                        <div class="summary-value text-capitalize">{{ $category->name }}</div>
+                        <span class="badge badge-type badge-expense mt-3">
+                            Expense
+                        </span>
+                    </div>
 
-                        {{-- Category ID --}}
-                        <div class="mb-4">
+                @endif
 
-                            <small class="text-muted">
-                                ID
-                            </small>
 
-                            <p class="mb-0 fw-semibold">
-                                #{{ $category->id }}
-                            </p>
+                {{-- Info Rows --}}
 
-                        </div>
+                <div class="p-4 p-md-5">
 
-                        {{-- Created At --}}
-                        <div class="mb-4">
+                    <div class="detail-row">
+                        <span class="detail-label">Type</span>
 
-                            <small class="text-muted">
-                                CREATED AT
-                            </small>
+                        @if($category->type === 'income')
+                            <span class="badge badge-type badge-income">
+                                Income
+                            </span>
+                        @else
+                            <span class="badge badge-type badge-expense">
+                                Expense
+                            </span>
+                        @endif
+                    </div>
 
-                            <p class="mb-0">
-                                {{ $category->created_at->format('d F Y, H:i') }}
-                            </p>
+                    <div class="detail-row">
+                        <span class="detail-label">ID</span>
+                        <span class="detail-value">#{{ str_pad($category->id, 3, '0', STR_PAD_LEFT) }}</span>
+                    </div>
 
-                        </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Created At</span>
+                        <span class="detail-value">
+                            <i class="bi bi-calendar-event me-2 text-muted"></i>{{ $category->created_at->format('d F Y, H:i') }}
+                        </span>
+                    </div>
 
-                        {{-- Updated At --}}
-                        <div class="mb-4">
+                    <div class="detail-row">
+                        <span class="detail-label">Updated At</span>
+                        <span class="detail-value">
+                            <i class="bi bi-clock-history me-2 text-muted"></i>{{ $category->updated_at->format('d F Y, H:i') }}
+                        </span>
+                    </div>
 
-                            <small class="text-muted">
-                                UPDATED AT
-                            </small>
 
-                            <p class="mb-0">
-                                {{ $category->updated_at->format('d F Y, H:i') }}
-                            </p>
+                    {{-- Actions --}}
 
-                        </div>
+                    <div class="d-flex gap-2 pt-4 mt-2">
 
-                        <hr>
+                        <a
+                            href="{{ route('categories.edit', $category) }}"
+                            class="btn btn-dark px-4"
+                        >
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Edit Category
+                        </a>
 
-                        {{-- Actions --}}
-                        <div class="d-flex gap-2">
+                        <form
+                            action="{{ route('categories.destroy', $category) }}"
+                            method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus category ini?')"
+                        >
 
-                            <a
-                                href="{{ route('categories.edit', $category) }}"
-                                class="btn btn-primary"
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger px-4 rounded-3 fw-semibold"
                             >
-                                Edit Category
-                            </a>
+                                <i class="bi bi-trash me-2"></i>
+                                Hapus
+                            </button>
 
-                            <form
-                                action="{{ route('categories.destroy', $category) }}"
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus category ini?')"
-                            >
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-outline-danger"
-                                >
-                                    Hapus
-                                </button>
-
-                            </form>
-
-                        </div>
+                        </form>
 
                     </div>
 
@@ -167,6 +145,4 @@
 
     </div>
 
-</body>
-
-</html>
+@endsection
