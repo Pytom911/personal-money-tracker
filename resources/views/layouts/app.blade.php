@@ -53,10 +53,10 @@
                         <a class="nav-link {{ request()->routeIs('wishlist.*') ? 'active' : '' }}"
                             href="{{ route('wishlist.index') }}">Wishlist</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('wishlistDeposit.*') ? 'active' : '' }}"
-                            href="{{ route('wishlistDeposit.index') }}">Wishlist Deposite</a>
-                    </li>
+                    {{-- <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('saving.*') ? 'active' : '' }}"
+                            href="{{ route('saving.index') }}">Savings</a>
+                    </li> --}}
                 </ul>
             </div>
         </div>

@@ -17,38 +17,33 @@ class WishlistDepositController extends Controller
     }
 
     // Menampilkan form tambah wishlists
-    // public function create()
-    // {
-    //     return view('wishlist.create');
-    // }
+    public function create()
+    {
+        $wishlists = Wishlist::all();
+        return view('wishlistDeposit.create', compact('wishlists'));
+    }
 
-    // // Menyimpan wishlists baru
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
-    //         'target_amount' => 'required|numeric|min:0',
-    //         'description' => 'required|string|max:255',
-    //         'deadline' => 'required|date',
-    //         'status' => 'required|string|max:255',
-    //     ]);
+    // Menyimpan wishlists baru
+    public function store(Request $request)
+    {
+        $request->validate([
+            'wishlist_id' => 'required|exists:wishlists,id',
+            'amount' => 'required|numeric|min:0',
+            'description' => 'required|string|max:255',
+            'deposit_date' => 'required|date',
+        ]);
 
-    //     $imagePath = $request->file('image')->store('wishlists', 'public');
+        WishlistDeposit::create([
+            'wishlist_id' => $request->wishlist_id,
+            'amount' => $request->amount,
+            'description' => $request->description,
+            'deposit_date' => $request->deposit_date,
+        ]);
 
-    //     Wishlist::create([
-    //         'name' => $request->name,
-    //         'image' => $imagePath,
-    //         'target_amount' => $request->target_amount,
-    //         'description' => $request->description,
-    //         'deadline' => $request->deadline,
-    //         'status' => $request->status,
-    //     ]);
-
-    //     return redirect()
-    //         ->route('wishlist.index')
-    //         ->with('success', 'Wishlist berhasil ditambahkan.');
-    // }
+        return redirect()
+            ->route('wishlistDeposit.index')
+            ->with('success', 'Deposit berhasil ditambahkan.');
+    }
 
     // // // Menampilkan detail category wishlist
     public function show(WishlistDeposit $wishlistDeposit)
@@ -57,10 +52,10 @@ class WishlistDepositController extends Controller
     }
 
     // // // Menampilkan form edit
-    // public function edit(Wishlist $wishlist)
-    // {
-    //     return view('wishlist.edit', compact('wishlist'));
-    // }
+    public function edit(WishlistDeposit $wishlistDeposit)
+    {
+        return view('wishlistDeposit.edit', compact('wishlistDeposit'));
+    }
 
     // // Mengupdate category
     // public function update(Request $request, Wishlist $wishlist)
@@ -98,16 +93,13 @@ class WishlistDepositController extends Controller
     //         ->with('success', 'Wishlist berhasil diupdate.');
     // }
     // // // Menghapus Wishlist
-    // public function destroy(Wishlist $wishlist)
-    // {
-    //     if ($wishlist->image) {
-    //         Storage::disk('public')->delete($wishlist->image);
-    //     }
+    public function destroy(WishlistDeposit $wishlistDeposit)
+    {
 
-    //     $wishlist->delete();
+        $wishlistDeposit->delete();
 
-    //     return redirect()
-    //         ->route('wishlist.index')
-    //         ->with('success', 'Wishlist berhasil dihapus.');
-    // }
+        return redirect()
+            ->route('wishlist.index')
+            ->with('success', 'Wishlist berhasil dihapus.');
+    }
 }

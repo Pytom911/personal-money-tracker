@@ -26,7 +26,10 @@
             @php
                 $savedAmount = $wishlistDeposit->wishlist->deposits->sum('amount');
 
-                $progress = $wishlistDeposit->wishlist->target_amount > 0 ? ($savedAmount / $wishlistDeposit->wishlist->target_amount) * 100 : 0;
+                $progress =
+                    $wishlistDeposit->wishlist->target_amount > 0
+                        ? ($savedAmount / $wishlistDeposit->wishlist->target_amount) * 100
+                        : 0;
 
                 $progress = min($progress, 100);
             @endphp
@@ -38,8 +41,9 @@
 
                 <div class="card-balance-highlight p-4 p-md-5 text-center">
                     @if ($wishlistDeposit->wishlist->image)
-                        <img src="{{ asset('storage/' . $wishlistDeposit->wishlist->image) }}" alt="{{ $wishlistDeposit->wishlist->name }}" width="220"
-                            height="220" style="object-fit: cover; border-radius: 10px;">
+                        <img src="{{ asset('storage/' . $wishlistDeposit->wishlist->image) }}"
+                            alt="{{ $wishlistDeposit->wishlist->name }}" width="220" height="220"
+                            style="object-fit: cover; border-radius: 10px;">
                     @else
                         <div class="d-flex align-items-center justify-content-center bg-light"
                             style="width: 70px; height: 70px; border-radius: 10px;">
@@ -57,12 +61,14 @@
 
             <div class="detail-row">
                 <span class="detail-label">Deposit Amount</span>
-                <span class="detail-value text-success">+Rp {{ number_format($wishlistDeposit->amount, 0, ',', '.') }}</span>
+                <span class="detail-value text-success">+Rp
+                    {{ number_format($wishlistDeposit->amount, 0, ',', '.') }}</span>
             </div>
 
             <div class="detail-row">
                 <span class="detail-label">Target Amount</span>
-                <span class="detail-value">Rp {{ number_format($wishlistDeposit->wishlist->target_amount, 0, ',', '.') }}</span>
+                <span class="detail-value">Rp
+                    {{ number_format($wishlistDeposit->wishlist->target_amount, 0, ',', '.') }}</span>
             </div>
 
             <div class="detail-row">
@@ -90,6 +96,16 @@
                     <i
                         class="bi bi-calendar-event me-2 text-muted"></i>{{ \Carbon\Carbon::parse($wishlistDeposit->deadline)->format('d F Y') }}
                 </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Created At</span>
+                <span class="detail-value">{{ $wishlistDeposit->created_at->format('d F Y, H:i') }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Updated At</span>
+                <span class="detail-value">{{ $wishlistDeposit->updated_at->format('d F Y, H:i') }}</span>
             </div>
 
 

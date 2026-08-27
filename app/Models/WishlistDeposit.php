@@ -12,8 +12,8 @@ class WishlistDeposit extends Model
     protected $fillable = [
         "wishlist_id",
         "amount",
-        "deposit_date",
         "description",
+        "deposit_date",
     ];
 
     public function wishlist()

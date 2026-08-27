@@ -13,6 +13,9 @@
             <p class="text-muted mb-0">Kelola semua Deposit dari Wishlist kamu.</p>
         </div>
         <div class="mt-4 mt-md-0">
+            <a href="{{ route('wishlist.index') }}" class="btn btn-dark">
+                <i class="bi bi-list me-2"></i> Wishlist Menu
+            </a>
             <a href="{{ route('wishlistDeposit.create') }}" class="btn btn-dark">
                 <i class="bi bi-plus-circle-fill me-2"></i> Add Deposit
             </a>

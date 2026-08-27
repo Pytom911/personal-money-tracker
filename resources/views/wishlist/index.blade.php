@@ -13,6 +13,10 @@
         </div>
 
         <div class="mt-4 mt-md-0">
+            <a href="{{ route('wishlistDeposit.index') }}" class="btn btn-dark">
+                <i class="bi bi-list me-2"></i>
+                Deposit Menu
+            </a>
             <a href="{{ route('wishlist.create') }}" class="btn btn-dark">
                 <i class="bi bi-plus-circle-fill me-2"></i>
                 Add Wishlist
