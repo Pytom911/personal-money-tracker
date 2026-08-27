@@ -28,7 +28,7 @@
         <div class="container">
             <a class="navbar-brand" href="{{ route('dashboard') }}">
                 <i class="bi bi-layers-fill"></i>
-                FinanceFlow
+                Personal Finance Tracker
             </a>
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarMenu">
@@ -48,6 +48,14 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}"
                             href="{{ route('categories.index') }}">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('wishlist.*') ? 'active' : '' }}"
+                            href="{{ route('wishlist.index') }}">Wishlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('wishlistDeposit.*') ? 'active' : '' }}"
+                            href="{{ route('wishlistDeposit.index') }}">Wishlist Deposite</a>
                     </li>
                 </ul>
             </div>

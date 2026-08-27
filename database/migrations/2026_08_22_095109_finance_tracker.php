@@ -21,8 +21,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('category_id')->constrained();
             $table->string('type');
-            $table->decimal('amount', 15, 2);
-            $table->text('description');
+            $table->decimal('amount', 10, 0);
+            $table->text('description')->nullable();
             $table->date('transaction_date');
             $table->timestamps();
         });

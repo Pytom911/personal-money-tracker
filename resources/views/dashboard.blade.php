@@ -27,7 +27,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <p class="text-muted mb-2">Total Balance</p>
-                        <div class="summary-value">Rp 8.250.000</div>
+                        <div class="summary-value">Rp {{ number_format($totalBalance) }}</div>
                     </div>
                     <div class="summary-icon">
                         <i class="bi bi-wallet2"></i>
@@ -48,7 +48,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <p class="text-muted mb-2">Total Income</p>
-                        <div class="summary-value text-dark">Rp 12.5M</div>
+                        <div class="summary-value text-dark">Rp {{ number_format($totalIncome) }}</div>
                     </div>
                     <div class="summary-icon icon-income">
                         <i class="bi bi-arrow-down-left"></i>
@@ -69,7 +69,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <p class="text-muted mb-2">Total Expense</p>
-                        <div class="summary-value text-dark">Rp 4.25M</div>
+                        <div class="summary-value text-dark">Rp {{ number_format($totalExpense) }}</div>
                     </div>
                     <div class="summary-icon icon-expense">
                         <i class="bi bi-arrow-up-right"></i>
