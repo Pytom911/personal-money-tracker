@@ -17,6 +17,14 @@ class Transaction extends Model
         'transaction_date',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'transaction_date' => 'date',
+            'amount' => 'decimal:0',
+        ];
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

@@ -9,8 +9,9 @@ use App\Http\Controllers\TransactionController;
 
 Route::get('/', [DashBoardController::class,'index'])->name('dashboard');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 Route::resource('categories', CategoryController::class);
 Route::resource('transaction', TransactionController::class);
-Route::resource('dashboard', DashboardController::class);
 Route::resource('wishlist', WishlistController::class);
 Route::resource('wishlistDeposit', WishlistDepositController::class);

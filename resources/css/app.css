@@ -261,12 +261,13 @@ p.text-muted {
     color: white;
 }
 
-/* Chart Placeholder Area */
+/* Chart Container */
 .chart-area {
     background: #f8fafc;
     border-radius: 16px;
-    border: 1px dashed #cbd5e1;
-    height: 280px;
+    border: 1px solid var(--border-light);
+    height: 300px;
+    position: relative;
 }
 
 /* =================================== */

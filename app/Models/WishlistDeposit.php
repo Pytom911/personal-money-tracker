@@ -10,11 +10,19 @@ class WishlistDeposit extends Model
     use HasFactory;
 
     protected $fillable = [
-        "wishlist_id",
-        "amount",
-        "description",
-        "deposit_date",
+        'wishlist_id',
+        'amount',
+        'description',
+        'deposit_date',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'deposit_date' => 'date',
+            'amount' => 'decimal:0',
+        ];
+    }
 
     public function wishlist()
     {
