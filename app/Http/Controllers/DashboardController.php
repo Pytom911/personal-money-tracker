@@ -71,8 +71,6 @@ class DashboardController extends Controller
                 $w->progress = $target > 0 ? min(100, round(($w->saved / $target) * 100)) : 0;
             });
 
-        $chart = $this->getCashFlowChart();
-
         return view('dashboard', compact(
             'totalIncome',
             'totalExpense',
@@ -85,8 +83,7 @@ class DashboardController extends Controller
             'recentTransactions',
             'spendingByCategory',
             'maxSpending',
-            'wishlists',
-            'chart'
+            'wishlists'
         ));
     }
 
@@ -96,33 +93,5 @@ class DashboardController extends Controller
             return $current > 0 ? 100 : 0;
         }
         return round((($current - $previous) / $previous) * 100, 1);
-    }
-
-    protected function getCashFlowChart()
-    {
-        $months = collect();
-        for ($i = 5; $i >= 0; $i--) {
-            $months->push(now()->copy()->subMonths($i));
-        }
-
-        $income = [];
-        $expense = [];
-
-        foreach ($months as $month) {
-            $income[] = (int) Transaction::where('type', 'income')
-                ->whereYear('transaction_date', $month->year)
-                ->whereMonth('transaction_date', $month->month)
-                ->sum('amount');
-            $expense[] = (int) Transaction::where('type', 'expense')
-                ->whereYear('transaction_date', $month->year)
-                ->whereMonth('transaction_date', $month->month)
-                ->sum('amount');
-        }
-
-        return [
-            'labels' => $months->map(fn ($m) => $m->format('M Y'))->all(),
-            'income' => $income,
-            'expense' => $expense,
-        ];
     }
 }

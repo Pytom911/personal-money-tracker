@@ -118,37 +118,86 @@
         </div>
     </div>
 
-    <!-- Charts & Spending Section -->
+    <!-- This Month Summary & Top Categories -->
+    @php $netThisMonth = $incomeThisMonth - $expenseThisMonth; @endphp
     <div class="row g-4 mb-5">
-        <!-- Income vs Expense Chart -->
+        <!-- This Month Summary -->
         <div class="col-lg-8">
             <div class="dashboard-card p-4 p-md-5 h-100">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h5 class="card-title-custom mb-1">Cash Flow Analytics</h5>
-                        <small class="text-muted">Performa keuangan 6 bulan terakhir</small>
-                    </div>
+                <div class="mb-4">
+                    <h5 class="card-title-custom mb-1">Ringkasan Bulan Ini</h5>
+                    <small class="text-muted">Performa keuangan bulan {{ now()->translatedFormat('F Y') }}</small>
                 </div>
-                <div class="chart-area p-3" style="border-style: none;">
-                    <canvas id="cashflowChart" height="100"></canvas>
+
+                <div class="row g-3">
+                    <!-- Income -->
+                    <div class="col-sm-4">
+                        <div class="summary-card p-3 h-100">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="summary-icon icon-income me-2" style="width:36px;height:36px;font-size:1rem;border-radius:10px;">
+                                    <i class="bi bi-arrow-down-left"></i>
+                                </div>
+                                <span class="text-muted small">Income</span>
+                            </div>
+                            <div class="fw-bold text-dark fs-5">Rp {{ number_format($incomeThisMonth) }}</div>
+                            <small class="text-success fw-semibold">
+                                <i class="bi bi-graph-up"></i> +{{ number_format($incomeChange, 1, ',', '.') }}%
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Expense -->
+                    <div class="col-sm-4">
+                        <div class="summary-card p-3 h-100">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="summary-icon icon-expense me-2" style="width:36px;height:36px;font-size:1rem;border-radius:10px;">
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </div>
+                                <span class="text-muted small">Expense</span>
+                            </div>
+                            <div class="fw-bold text-dark fs-5">Rp {{ number_format($expenseThisMonth) }}</div>
+                            <small class="{{ $expenseChange <= 0 ? 'text-success' : 'text-danger' }} fw-semibold">
+                                <i class="bi {{ $expenseChange <= 0 ? 'bi-graph-down' : 'bi-graph-up' }}"></i>
+                                {{ $expenseChange <= 0 ? '' : '+' }}{{ number_format($expenseChange, 1, ',', '.') }}%
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Net / Cash Flow -->
+                    <div class="col-sm-4">
+                        <div class="summary-card p-3 h-100">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="summary-icon me-2" style="width:36px;height:36px;font-size:1rem;border-radius:10px;background:#eef2ff;color:var(--primary);">
+                                    <i class="bi bi-wallet2"></i>
+                                </div>
+                                <span class="text-muted small">Net / Cash Flow</span>
+                            </div>
+                            <div class="fw-bold text-dark fs-5">
+                                <span class="{{ $netThisMonth >= 0 ? 'text-success' : 'text-danger' }}">
+                                    {{ $netThisMonth >= 0 ? '+' : '-' }} Rp {{ number_format(abs($netThisMonth)) }}
+                                </span>
+                            </div>
+                            <small class="text-muted">sisa bulan ini</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Spending by Category -->
+        <!-- Top Spending Categories (compact) -->
         <div class="col-lg-4">
             <div class="dashboard-card p-4 p-md-5 h-100">
-                <h5 class="card-title-custom mb-1">Spending Categories</h5>
-                <small class="text-muted">Distribusi pengeluaran bulan ini</small>
+                <h5 class="card-title-custom mb-1">Top Kategori Pengeluaran</h5>
+                <small class="text-muted">Pengeluaran terbesar bulan ini</small>
 
-                <div class="mt-4 pt-2">
+                <div class="mt-4">
                     @forelse ($spendingByCategory as $index => $cat)
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between mb-2">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
                                 <span class="fw-medium text-dark">{{ $cat->name }}</span>
-                                <span class="fw-bold">Rp {{ number_format($cat->total) }}</span>
+                                <span class="fw-bold small">Rp {{ number_format($cat->total) }}</span>
                             </div>
-                            <div class="progress">
+                            <div class="progress" style="height:8px;">
                                 @php
                                     $gradients = ['bg-gradient-primary', 'bg-gradient-warning', 'bg-gradient-danger', 'bg-gradient-info'];
                                     $width = $maxSpending > 0 ? round(($cat->total / $maxSpending) * 100) : 0;
@@ -308,80 +357,4 @@
         </div>
     </div>
 
-@endsection
-
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script>
-        const ctx = document.getElementById('cashflowChart');
-
-        const labels = @json($chart['labels']);
-        const incomeData = @json($chart['income']);
-        const expenseData = @json($chart['expense']);
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Income',
-                        data: incomeData,
-                        backgroundColor: 'rgba(22, 163, 74, 0.7)',
-                        borderColor: '#16a34a',
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barPercentage: 0.6,
-                    },
-                    {
-                        label: 'Expense',
-                        data: expenseData,
-                        backgroundColor: 'rgba(239, 68, 68, 0.7)',
-                        borderColor: '#ef4444',
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barPercentage: 0.6,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            boxWidth: 8,
-                            font: { weight: 600 },
-                        },
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return context.dataset.label + ': Rp ' +
-                                    new Intl.NumberFormat('id-ID').format(context.parsed.y);
-                            },
-                        },
-                    },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function (value) {
-                                if (value >= 1000000) return (value / 1000000) + 'jt';
-                                if (value >= 1000) return (value / 1000) + 'rb';
-                                return value;
-                            },
-                        },
-                        grid: { color: 'rgba(226, 232, 240, 0.5)' },
-                    },
-                    x: {
-                        grid: { display: false },
-                    },
-                },
-            },
-        });
-    </script>
 @endsection
