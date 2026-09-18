@@ -23,47 +23,74 @@
 
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
-                <i class="bi bi-layers-fill"></i>
-                Personal Finance Tracker
-            </a>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarMenu">
-                <i class="bi bi-list fs-1 text-dark"></i>
-            </button>
+    <!-- Sidebar (Desktop) -->
+    <aside class="sidebar d-none d-lg-flex flex-column">
+        <a class="sidebar-brand" href="{{ route('dashboard') }}">
+            <span class="sidebar-brand-icon"><i class="bi bi-layers-fill"></i></span>
+            <span class="sidebar-brand-text">
+                Finance Tracker
+                <small>Personal Finance</small>
+            </span>
+        </a>
 
-            <div class="collapse navbar-collapse" id="navbarMenu">
-                <ul class="navbar-nav ms-auto gap-2">
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                            href="{{ route('dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}"
-                            href="{{ route('transaction.index') }}">Transactions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}"
-                            href="{{ route('categories.index') }}">Categories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('wishlist.*') ? 'active' : '' }}"
-                            href="{{ route('wishlist.index') }}">Wishlist</a>
-                    </li>
-                    {{-- <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('saving.*') ? 'active' : '' }}"
-                            href="{{ route('saving.index') }}">Savings</a>
-                    </li> --}}
-                </ul>
+        <div class="sidebar-body">
+            @include('layouts.partials.sidebar-nav')
+        </div>
+
+        <div class="sidebar-footer">
+            {{-- <div class="sidebar-mini-card">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="sidebar-avatar"><i class="bi bi-person-fill"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="sidebar-user-name">My Budget</div>
+                        <small class="text-secondary">Personal Finance Tracker</small>
+                    </div>
+                </div>
+            </div> --}}
+        </div>
+    </aside>
+
+    <!-- Mobile Offcanvas -->
+    <div class="offcanvas offcanvas-start sidebar-offcanvas" tabindex="-1" id="mobileSidebar"
+        aria-labelledby="mobileSidebarLabel">
+        <div class="offcanvas-header border-bottom border-light-subtle">
+            <a class="sidebar-brand mb-0" href="{{ route('dashboard') }}">
+                <span class="sidebar-brand-icon"><i class="bi bi-layers-fill"></i></span>
+                <span class="sidebar-brand-text">
+                    Finance Tracker
+                    <small>Personal Finance</small>
+                </span>
+            </a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="sidebar-body">
+                @include('layouts.partials.sidebar-nav')
             </div>
         </div>
-    </nav>
+    </div>
+
+    <!-- Topbar -->
+    <header class="topbar d-flex align-items-center">
+        <button class="topbar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <div class="topbar-title d-none d-sm-block">
+            @yield('title', 'Dashboard')
+        </div>
+
+        {{-- <div class="ms-auto d-flex align-items-center gap-2">
+            <button class="topbar-icon-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"
+                aria-controls="mobileSidebar" title="Menu">
+                <i class="bi bi-person-circle"></i>
+            </button>
+        </div> --}}
+    </header>
 
     <!-- Main -->
-    <main class="container py-4 py-lg-5">
+    <main class="main-content">
         @yield('content')
     </main>
 
